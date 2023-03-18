@@ -73,6 +73,21 @@ async def on_ready():
     await zomboi.add_cog(MapHandler(zomboi))
     await zomboi.add_cog(AdminLogHandler(zomboi, logPath))
 
+@zomboi.event
+async def on_message(message):
+    if message.author == zomboi.user:
+        return
+
+    # Extract message content
+    content = message.content.strip()
+
+    # Send message via rcon
+    rconAdapter = zomboi.get_cog("RCONAdapter")
+    if rconAdapter is not None:
+        with rconAdapter.client() as client:
+            client.run(f"servermsg \"[{message.author.name}]{content}\"")
+
+    await zomboi.process_commands(message)
 
 # Always finally run the bot
 token = os.getenv("DISCORD_TOKEN")

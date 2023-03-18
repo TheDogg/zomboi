@@ -18,6 +18,9 @@ class RCONAdapter(commands.Cog):
         self.rconPassword = os.getenv("RCON_PASSWORD")
         self.syncplayers.start()
 
+    def client(self):
+        return Client(self.rconHost, self.rconPort, passwd=self.rconPassword, timeout=5.0)
+        
     @commands.command()
     @has_permissions(administrator=True)
     async def option(self, ctx, option: str, newValue: str = None):
